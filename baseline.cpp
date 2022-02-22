@@ -16,7 +16,7 @@ unsigned baselineSqrt(std::span<double> values, unsigned repeat) {
    return failures;
 }
 
-static unsigned doFib(unsigned n, unsigned maxDepth) noexcept __attribute__((noinline, optimize("no-optimize-sibling-calls")));
+// static unsigned doFib(unsigned n, unsigned maxDepth) noexcept __attribute__((noinline, optimize("no-optimize-sibling-calls")));
 static unsigned doFib(unsigned n, unsigned maxDepth) noexcept {
    if (!maxDepth) std::terminate();
    if (n <= 2) return 1;

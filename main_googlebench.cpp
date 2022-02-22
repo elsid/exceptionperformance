@@ -1,5 +1,6 @@
 #include <span>
 #include <thread>
+#include <array>
 #include <benchmark/benchmark.h>
 
 using namespace std;
@@ -8,16 +9,16 @@ unsigned baselineSqrt(span<double> values, unsigned repeat);
 unsigned baselineFib(unsigned n, unsigned maxDepth);
 unsigned exceptionsSqrt(span<double> values, unsigned repeat);
 unsigned exceptionsFib(unsigned n, unsigned maxDepth);
-unsigned leafResultSqrt(span<double> values, unsigned repeat) noexcept;
-unsigned leafResultFib(unsigned n, unsigned maxDepth) noexcept;
-unsigned expectedSqrt(span<double> values, unsigned repeat) noexcept;
-unsigned expectedFib(unsigned n, unsigned maxDepth) noexcept;
-unsigned herbceptionEmulationSqrt(span<double> values, unsigned repeat) noexcept;
-unsigned herbceptionEmulationFib(unsigned n, unsigned maxDepth) noexcept;
-unsigned herbceptionsSqrt(span<double> values, unsigned repeat) noexcept;
-unsigned herbceptionsFib(unsigned n, unsigned maxDepth) noexcept;
-unsigned outcomeResultSqrt(span<double> values, unsigned repeat) noexcept;
-unsigned outcomeResultFib(unsigned n, unsigned maxDepth) noexcept;
+// unsigned leafResultSqrt(span<double> values, unsigned repeat) noexcept;
+// unsigned leafResultFib(unsigned n, unsigned maxDepth) noexcept;
+// unsigned expectedSqrt(span<double> values, unsigned repeat) noexcept;
+// unsigned expectedFib(unsigned n, unsigned maxDepth) noexcept;
+// unsigned herbceptionEmulationSqrt(span<double> values, unsigned repeat) noexcept;
+// unsigned herbceptionEmulationFib(unsigned n, unsigned maxDepth) noexcept;
+// unsigned herbceptionsSqrt(span<double> values, unsigned repeat) noexcept;
+// unsigned herbceptionsFib(unsigned n, unsigned maxDepth) noexcept;
+// unsigned outcomeResultSqrt(span<double> values, unsigned repeat) noexcept;
+// unsigned outcomeResultFib(unsigned n, unsigned maxDepth) noexcept;
 
 using TestedFunctionSqrt = unsigned (*)(span<double>, unsigned);
 using TestedFunctionFib = unsigned (*)(unsigned, unsigned);
@@ -108,7 +109,7 @@ static void BM_fib(benchmark::State& state, TestedFunctionFib func) {
 
 int main(int argc, char** argv) {
    auto configureBenchmark = [](auto* benchmark, const auto& failureRates) {
-      benchmark->ThreadRange(1, thread::hardware_concurrency() / 2);
+      benchmark->DenseThreadRange(1, thread::hardware_concurrency(), 1);
       benchmark->UseManualTime();
       benchmark->Unit(benchmark::kMillisecond);
       for (auto failureRate : failureRates)
@@ -116,13 +117,14 @@ int main(int argc, char** argv) {
    };
 
    constexpr array<unsigned, 4> failureRates = {0, 1, 10, 100};
-   constexpr array<tuple<const char*, TestedFunctionSqrt, TestedFunctionFib>, 6> tests = {
+   constexpr array<tuple<const char*, TestedFunctionSqrt, TestedFunctionFib>, 1> tests = {
       tuple{"exceptions", &exceptionsSqrt, &exceptionsFib},
-      tuple{"LEAF", &leafResultSqrt, &leafResultFib},
-      tuple{"std::expected", &expectedSqrt, &expectedFib},
-      tuple{"herbceptionemulation", &herbceptionEmulationSqrt, &herbceptionEmulationFib},
-      tuple{"herbceptions", &herbceptionsSqrt, &herbceptionsFib},
-      tuple{"outcome", &outcomeResultSqrt, &outcomeResultFib}};
+      // tuple{"LEAF", &leafResultSqrt, &leafResultFib},
+      // tuple{"std::expected", &expectedSqrt, &expectedFib},
+      // tuple{"herbceptionemulation", &herbceptionEmulationSqrt, &herbceptionEmulationFib},
+      // tuple{"herbceptions", &herbceptionsSqrt, &herbceptionsFib},
+      // tuple{"outcome", &outcomeResultSqrt, &outcomeResultFib}
+   };
 
    configureBenchmark(benchmark::RegisterBenchmark("SQRT_baseline", BM_sqrt, &baselineSqrt), array<unsigned, 1>{0});
    for (auto test : tests) {

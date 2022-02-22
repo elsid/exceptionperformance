@@ -9,7 +9,7 @@ struct InvalidValue {};
 static expected<void, InvalidValue> doSqrt(std::span<double> values) __attribute__((noinline));
 static expected<void, InvalidValue> doSqrt(std::span<double> values) {
    for (auto& v : values) {
-      if (v < 0) return unexpected<InvalidValue>(InvalidValue{});
+      if (v < 0) return std::experimental::unexpected<InvalidValue>(InvalidValue{});
       v = sqrt(v);
    }
    return {};
@@ -25,12 +25,12 @@ unsigned expectedSqrt(std::span<double> values, unsigned repeat) {
 
 static expected<unsigned, InvalidValue> doFib(unsigned n, unsigned maxDepth) __attribute((noinline, optimize("no-optimize-sibling-calls")));
 static expected<unsigned, InvalidValue> doFib(unsigned n, unsigned maxDepth) {
-   if (!maxDepth) return unexpected<InvalidValue>(InvalidValue{});
+   if (!maxDepth) return std::experimental::unexpected<InvalidValue>(InvalidValue{});
    if (n <= 2) return 1;
    auto n2 = doFib(n - 2, maxDepth - 1);
-   if (!n2) return unexpected<InvalidValue>(n2.error());
+   if (!n2) return std::experimental::unexpected<InvalidValue>(n2.error());
    auto n1 = doFib(n - 1, maxDepth - 1);
-   if (!n1) return unexpected<InvalidValue>(n1.error());
+   if (!n1) return std::experimental::unexpected<InvalidValue>(n1.error());
    return n2.value() + n1.value();
 }
 

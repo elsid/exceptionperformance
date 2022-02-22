@@ -3,7 +3,7 @@
 
 struct InvalidValue {};
 
-static void doSqrt(std::span<double> values) __attribute__((noinline));
+// static void doSqrt(std::span<double> values) __attribute__((noinline));
 static void doSqrt(std::span<double> values) {
    for (auto& v : values) {
       if (v < 0) throw InvalidValue{};
@@ -22,7 +22,7 @@ unsigned exceptionsSqrt(std::span<double> values, unsigned repeat) {
 }
 
 // prevent the compile from recognizing and compiling away the fib logic
-static unsigned doFib(unsigned n, unsigned maxDepth) __attribute((noinline, optimize("-O1")));
+// static unsigned doFib(unsigned n, unsigned maxDepth) __attribute((noinline, optimize("-O1")));
 
 static unsigned doFib(unsigned n, unsigned maxDepth) {
    if (!maxDepth) throw InvalidValue();
